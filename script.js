@@ -44,3 +44,21 @@ app.post('/logs', (req,res) => {
         res.status(500).send(err);
     });
 })
+
+app.get('/logs/:id', (req, res) => {
+    const id = req.params.id;
+    if (!id) return res.status(404).send('O Id tá certo, querido.');
+    readFile(logsPath).then(data => {
+        let log = undefined;
+        String(data).split("\n").forEach(line => {
+            if(line.substring(0,id.length) !== id) return;
+            log = line; 
+        })
+        if (!log) return res.status(404).send('Não achei o ID, tenta de novo.');
+        return res.status(200).send(log);
+    }).catch(err => {
+        res.status(500).send(err);
+    });
+});
+
+app.listen(port,() => console.log('Server startado em porta `${PORT}`'));
