@@ -36,6 +36,11 @@ async function newLog(name) {
     return log;
 }
 
-
-
-app.get()
+app.post('/logs', (req,res) => {
+    if (!req.body) return res.status(400).send('Ce esqueceu de passar o body, tá flor?');
+    newLog(req.body).then(log => {
+        res.status(201).send(log);
+    }).catch(err => {
+        res.status(500).send(err);
+    });
+})
